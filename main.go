@@ -2,10 +2,10 @@ package main
 
 import (
 	x "calorieTracking/business"
+	"fmt"
 )
 
 func main() {
 
-	x.GetValues(x.GetUrl("muz"))
-
+	fmt.Println(x.GetValues(x.GetUrl("muz")))
 }

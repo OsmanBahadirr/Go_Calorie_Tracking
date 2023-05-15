@@ -4,6 +4,8 @@ import (
 	entity "calorieTracking/Entities"
 	"fmt"
 	"net/http"
+	"strconv"
+	"strings"
 
 	"github.com/PuerkitoBio/goquery"
 )
@@ -40,11 +42,19 @@ func GetValues(URL string) entity.NutrientError {
 		return nutrient
 	}
 
-	doc.Find(".tr").Each(func(i int, s *goquery.Selection) {
-		title := s.Find(".td").Text()
-		fmt.Println(title)
+	title := doc.Find("tbody").Find("tr").Each(func(i int, s *goquery.Selection) {
 
 	})
+
+	nutrientCarb := strings.Split(title.Find(".lbl_carb100").Text(), ".")[0]
+	nutrientFiber := strings.Split(title.Find(".lbl_lif100").Text(), ".")[0]
+	nutrientPro := strings.Split(title.Find(".lbl_prot100").Text(), ".")[0]
+	nutrientFat := strings.Split(title.Find(".lbl_fat100").Text(), ".")[0]
+
+	nutrient.Nutrient.Carb, _ = strconv.Atoi(nutrientCarb)
+	nutrient.Nutrient.Fiber, _ = strconv.Atoi(nutrientFiber)
+	nutrient.Nutrient.Pro, _ = strconv.Atoi(nutrientPro)
+	nutrient.Nutrient.Fat, _ = strconv.Atoi(nutrientFat)
 
 	return nutrient
 }
