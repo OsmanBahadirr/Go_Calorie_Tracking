@@ -3,6 +3,7 @@ package business
 import (
 	entity "calorieTracking/Entities"
 	"fmt"
+	"log"
 	"net/http"
 	"strconv"
 	"strings"
@@ -16,30 +17,21 @@ func GetUrl(n string) string {
 	return URL
 }
 
-func GetValues(URL string) entity.NutrientError {
+func GetValues(URL string) entity.Nutrient {
 
-	var nutrient entity.NutrientError
+	var nutrient entity.Nutrient
 
 	res, err := http.Get(URL)
 
-	if err != nil {
+	if err != nil || res.StatusCode != 200 {
 		fmt.Println(err)
-		nutrient.Err = err
-		return nutrient
-	}
-
-	if res.StatusCode != 200 {
-		fmt.Println(res.StatusCode)
-		nutrient.Err = err
-		return nutrient
+		log.Fatal(err)
 	}
 
 	doc, err := goquery.NewDocumentFromReader(res.Body)
 
 	if err != nil {
-		fmt.Println(err)
-		nutrient.Err = err
-		return nutrient
+		log.Fatal(err)
 	}
 
 	title := doc.Find("tbody").Find("tr").Each(func(i int, s *goquery.Selection) {
@@ -55,13 +47,11 @@ func GetValues(URL string) entity.NutrientError {
 	nutrientPro := strings.Split(title.Find(".lbl_prot100").Text(), ".")[0]
 	nutrientFat := strings.Split(title.Find(".lbl_fat100").Text(), ".")[0]
 
-	nutrient.Nutrient.Cal, _ = strconv.Atoi(titleCal.Text())
-	nutrient.Nutrient.Carb, _ = strconv.Atoi(nutrientCarb)
-	nutrient.Nutrient.Fiber, _ = strconv.Atoi(nutrientFiber)
-	nutrient.Nutrient.Pro, _ = strconv.Atoi(nutrientPro)
-	nutrient.Nutrient.Fat, _ = strconv.Atoi(nutrientFat)
-
-	fmt.Println(titleCal.Text())
+	nutrient.Cal, _ = strconv.Atoi(titleCal.Text())
+	nutrient.Carb, _ = strconv.Atoi(nutrientCarb)
+	nutrient.Fiber, _ = strconv.Atoi(nutrientFiber)
+	nutrient.Pro, _ = strconv.Atoi(nutrientPro)
+	nutrient.Fat, _ = strconv.Atoi(nutrientFat)
 
 	return nutrient
 }
