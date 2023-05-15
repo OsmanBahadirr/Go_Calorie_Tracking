@@ -46,15 +46,22 @@ func GetValues(URL string) entity.NutrientError {
 
 	})
 
+	titleCal := doc.Find("span.kkBigNumber.nut_kcal_count2").Each(func(i int, s *goquery.Selection) {
+
+	})
+
 	nutrientCarb := strings.Split(title.Find(".lbl_carb100").Text(), ".")[0]
 	nutrientFiber := strings.Split(title.Find(".lbl_lif100").Text(), ".")[0]
 	nutrientPro := strings.Split(title.Find(".lbl_prot100").Text(), ".")[0]
 	nutrientFat := strings.Split(title.Find(".lbl_fat100").Text(), ".")[0]
 
+	nutrient.Nutrient.Cal, _ = strconv.Atoi(titleCal.Text())
 	nutrient.Nutrient.Carb, _ = strconv.Atoi(nutrientCarb)
 	nutrient.Nutrient.Fiber, _ = strconv.Atoi(nutrientFiber)
 	nutrient.Nutrient.Pro, _ = strconv.Atoi(nutrientPro)
 	nutrient.Nutrient.Fat, _ = strconv.Atoi(nutrientFat)
+
+	fmt.Println(titleCal.Text())
 
 	return nutrient
 }
