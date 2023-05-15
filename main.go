@@ -1,9 +1,11 @@
 package main
 
-import "fmt"
+import (
+	x "calorieTracking/business"
+)
 
 func main() {
 
-	fmt.Println("Hello World")
+	x.GetValues(x.GetUrl("muz"))
 
 }
